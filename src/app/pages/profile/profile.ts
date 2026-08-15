@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { GithubCalendar } from '../../shared/github-calendar/github-calendar';
+import { GithubRepo, GithubService } from '../../core/services/github.service';
+import { PROJECTS } from '../../core/data/projects.data';
+import { ProjectCard } from '../../shared/project-card/project-card';
 
 interface ExperienceItem {
   role: string;
@@ -20,12 +23,16 @@ interface CourseItem {
   detail: string;
 }
 
+const RELATIVE_TIME = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+
 @Component({
   selector: 'app-profile',
-  imports: [GithubCalendar],
+  imports: [GithubCalendar, ProjectCard],
   templateUrl: './profile.html',
 })
 export class Profile {
+  private readonly github = inject(GithubService);
+
   protected readonly skillGroups: { label: string; items: string[] }[] = [
     {
       label: 'Lenguajes de programación',
@@ -70,16 +77,12 @@ export class Profile {
     },
   ];
 
+  // Más reciente primero — se usa para "3 más recientes + ver más".
   protected readonly courses: CourseItem[] = [
     {
-      name: 'Tableau',
-      period: 'Septiembre 2021',
-      detail: 'Análisis de datos y visualizaciones.',
-    },
-    {
-      name: 'IBM Skills Academy',
-      period: 'Julio y Octubre 2022',
-      detail: 'Ciencia de datos · Artificial Intelligence Practitioners.',
+      name: 'Coursera',
+      period: 'Noviembre 2024',
+      detail: 'Preparación de datos para el análisis con Microsoft Excel.',
     },
     {
       name: 'Platzi',
@@ -87,11 +90,20 @@ export class Profile {
       detail: 'Organización y productividad con Notion.',
     },
     {
-      name: 'Coursera',
-      period: 'Noviembre 2024',
-      detail: 'Preparación de datos para el análisis con Microsoft Excel.',
+      name: 'IBM Skills Academy',
+      period: 'Julio y Octubre 2022',
+      detail: 'Ciencia de datos · Artificial Intelligence Practitioners.',
+    },
+    {
+      name: 'Tableau',
+      period: 'Septiembre 2021',
+      detail: 'Análisis de datos y visualizaciones.',
     },
   ];
+
+  protected readonly recentCourses = this.courses.slice(0, 3);
+  protected readonly moreCourses = this.courses.slice(3);
+  protected readonly showAllCourses = signal(false);
 
   protected readonly languages: { label: string; level: string }[] = [
     { label: 'Español', level: 'Nativo' },
@@ -103,6 +115,14 @@ export class Profile {
 
   protected readonly githubUsername = 'NicoGomezG';
 
+  // Repos con logo propio (ya usado en Proyectos) en vez de la imagen
+  // auto-generada de GitHub.
+  private readonly knownRepoLogos: Record<string, string> = {
+    'notifica-legal-ui': '/logos/notifica-legal.png',
+    Lonche: '/logos/lonche.png',
+    CGL: '/logos/cgl-producciones.png',
+  };
+
   protected readonly socialLinks: { label: string; href: string; icon: 'github' | 'linkedin' }[] = [
     { label: 'GitHub', href: 'https://github.com/NicoGomezG', icon: 'github' },
     {
@@ -111,4 +131,47 @@ export class Profile {
       icon: 'linkedin',
     },
   ];
+
+  protected readonly featuredProjects = PROJECTS.slice(0, 3);
+  protected readonly yearsExperience = new Date().getFullYear() - 2021;
+
+  protected readonly githubTotal = signal<number | null>(null);
+  protected readonly recentRepos = signal<GithubRepo[]>([]);
+  protected readonly recentReposLoading = signal(true);
+  protected readonly recentReposError = signal(false);
+
+  constructor() {
+    this.github
+      .getContributions(this.githubUsername)
+      .then(({ total }) => this.githubTotal.set(total))
+      .catch(() => this.githubTotal.set(null));
+
+    this.github
+      .getRecentRepos(this.githubUsername, 3)
+      .then((repos) => this.recentRepos.set(repos))
+      .catch(() => this.recentReposError.set(true))
+      .finally(() => this.recentReposLoading.set(false));
+  }
+
+  protected toggleCourses(): void {
+    this.showAllCourses.set(!this.showAllCourses());
+  }
+
+  protected relativePush(dateStr: string): string {
+    const diffMs = new Date(dateStr).getTime() - Date.now();
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'hoy';
+    if (Math.abs(diffDays) < 30) return RELATIVE_TIME.format(diffDays, 'day');
+
+    const diffMonths = Math.round(diffDays / 30);
+    return RELATIVE_TIME.format(diffMonths, 'month');
+  }
+
+  protected logoFor(repo: GithubRepo): string {
+    return (
+      this.knownRepoLogos[repo.name] ??
+      `https://opengraph.githubassets.com/1/${this.githubUsername}/${repo.name}`
+    );
+  }
 }
