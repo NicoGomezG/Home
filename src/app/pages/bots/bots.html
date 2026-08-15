@@ -1,0 +1,35 @@
+<section class="mx-auto max-w-4xl px-6 py-16">
+  <h1 class="text-3xl font-bold tracking-tight text-neutral-100">Bots de Discord</h1>
+  <p class="mt-2 text-neutral-400">
+    Bots que he desarrollado, disponibles para descarga.
+  </p>
+  <p class="mt-4 rounded-lg border border-amber-900/50 bg-amber-950/40 px-4 py-3 text-sm text-amber-300">
+    El control de acceso a las descargas todavía no está implementado (login,
+    roles de Discord, etc.). Por ahora esto es solo el listado.
+  </p>
+
+  <div class="mt-8 grid gap-5 sm:grid-cols-2">
+    @for (bot of bots; track bot.id) {
+      <article class="flex flex-col rounded-xl border border-neutral-800 p-5">
+        <h3 class="font-semibold text-neutral-100">{{ bot.name }}</h3>
+        <p class="mt-2 flex-1 text-sm text-neutral-400">
+          {{ bot.description }}
+        </p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          @for (tag of bot.tags; track tag) {
+            <span class="rounded-md bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">
+              {{ tag }}
+            </span>
+          }
+        </div>
+        <button
+          type="button"
+          disabled
+          class="mt-4 cursor-not-allowed rounded-md bg-neutral-800 px-3 py-2 text-sm font-medium text-neutral-500"
+        >
+          Descargar (próximamente)
+        </button>
+      </article>
+    }
+  </div>
+</section>

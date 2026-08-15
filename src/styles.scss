@@ -1,0 +1,16 @@
+@use "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "General Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  @apply bg-neutral-950 text-neutral-300;
+}

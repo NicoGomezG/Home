@@ -1,0 +1,31 @@
+@if (loading()) {
+  <p class="text-sm text-neutral-500">Cargando historial de GitHub…</p>
+} @else if (error()) {
+  <p class="text-sm text-neutral-500">
+    No se pudo cargar el historial de GitHub en este momento.
+  </p>
+} @else {
+  <p class="mb-3 text-sm text-neutral-400">
+    {{ total() }} contribuciones en el último año
+  </p>
+  <div #scrollContainer class="overflow-x-auto pb-1">
+    <svg [attr.width]="svgWidth()" [attr.height]="svgHeight" class="block">
+      @for (week of weeks(); track $index; let wi = $index) {
+        @for (day of week; track $index; let di = $index) {
+          <rect
+            [attr.x]="x(wi)"
+            [attr.y]="y(di)"
+            width="11"
+            height="11"
+            rx="2"
+            [attr.fill]="colorFor(day)"
+          >
+            @if (day) {
+              <title>{{ day.date }}: {{ day.count }} contribuciones</title>
+            }
+          </rect>
+        }
+      }
+    </svg>
+  </div>
+}
