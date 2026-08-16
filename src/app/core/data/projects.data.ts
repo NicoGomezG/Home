@@ -37,4 +37,13 @@ export const PROJECTS: Project[] = [
     liveUrl: 'https://cgl-producciones.vercel.app/',
     liveUrlLabel: 'cgl-producciones.vercel.app',
   },
+  {
+    id: 'hubbert',
+    title: 'Hubbert',
+    description: 'Bot de Discord con saludos de cumpleaños automáticos, creación de embeds y otras utilidades para servidores.',
+    tags: ['Discord', 'Bot', 'Node.js'],
+    logoUrl: '/logos/hubbert.png',
+    liveUrl: 'https://hubbert.vercel.app/',
+    liveUrlLabel: 'hubbert.vercel.app',
+  },
 ];
