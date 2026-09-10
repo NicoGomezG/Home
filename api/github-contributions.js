@@ -36,7 +36,11 @@ module.exports = async (req, res) => {
     counts.push(match[1] === 'No contributions' ? 0 : parseInt(match[1], 10));
   }
 
-  const merged = days.map((day, i) => ({ ...day, count: counts[i] ?? 0 }));
+  // GitHub's markup lists <td> cells row-by-weekday (all Sundays, then all
+  // Mondays, ...), not chronologically, so re-sort before returning.
+  const merged = days
+    .map((day, i) => ({ ...day, count: counts[i] ?? 0 }))
+    .sort((a, b) => a.date.localeCompare(b.date));
   const total = merged.reduce((sum, day) => sum + day.count, 0);
 
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
