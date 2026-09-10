@@ -11,10 +11,5 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/projects/projects').then((m) => m.Projects),
     title: 'Proyectos — Nicolás Gómez',
   },
-  {
-    path: 'bots',
-    loadComponent: () => import('./pages/bots/bots').then((m) => m.Bots),
-    title: 'Bots de Discord — Nicolás Gómez',
-  },
   { path: '**', redirectTo: '' },
 ];
