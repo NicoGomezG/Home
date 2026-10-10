@@ -17,7 +17,7 @@
     <h3 class="text-xl font-semibold text-neutral-100">{{ project().title }}</h3>
   </a>
 
-  <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-hover:grid-rows-[1fr]">
+  <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr] [@media(hover:none)]:grid-rows-[1fr]">
     <div class="overflow-hidden">
       <div class="border-t border-neutral-800 p-4">
         <p class="text-sm text-neutral-400">{{ project().description }}</p>

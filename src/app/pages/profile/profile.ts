@@ -3,6 +3,7 @@ import { GithubCalendar } from '../../shared/github-calendar/github-calendar';
 import { GithubRepo, GithubService } from '../../core/services/github.service';
 import { PROJECTS } from '../../core/data/projects.data';
 import { ProjectCard } from '../../shared/project-card/project-card';
+import { MatrixText } from '../../shared/matrix-text/matrix-text';
 
 interface ExperienceItem {
   role: string;
@@ -27,7 +28,7 @@ const RELATIVE_TIME = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
 
 @Component({
   selector: 'app-profile',
-  imports: [GithubCalendar, ProjectCard],
+  imports: [GithubCalendar, ProjectCard, MatrixText],
   templateUrl: './profile.html',
 })
 export class Profile {
@@ -61,6 +62,12 @@ export class Profile {
       org: 'GodTier SPA',
       period: '2021 — 2023',
       description: 'Gestión y producción de eventos.',
+    },
+    {
+      role: 'Producción de eventos',
+      org: 'CGL Producciones',
+      period: '2017 — Actualidad',
+      description: 'Gestión y producción de eventos gamer.',
     },
   ];
 
@@ -123,13 +130,19 @@ export class Profile {
     CGL: '/logos/cgl-producciones.png',
   };
 
-  protected readonly socialLinks: { label: string; href: string; icon: 'github' | 'linkedin' }[] = [
+  protected readonly socialLinks: {
+    label: string;
+    href: string;
+    icon: 'github' | 'linkedin' | 'instagram' | 'discord';
+  }[] = [
     { label: 'GitHub', href: 'https://github.com/NicoGomezG', icon: 'github' },
     {
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/nicolas-gomez-godoy-5589ab210/',
       icon: 'linkedin',
     },
+    { label: 'Instagram', href: 'https://www.instagram.com/nicogomez_go/', icon: 'instagram' },
+    { label: 'Discord', href: 'https://discord.gg/AAaHWYHWAw', icon: 'discord' },
   ];
 
   protected readonly featuredProjects = PROJECTS.slice(0, 3);

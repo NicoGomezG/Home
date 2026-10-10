@@ -4,7 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/profile/profile').then((m) => m.Profile),
-    title: 'Nicolás Gómez — Perfil',
+    title: 'Nicolás Gómez — CV',
   },
   {
     path: 'proyectos',
